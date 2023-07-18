@@ -8,9 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class JdbcSearchDAO implements SearchDAO {
@@ -32,12 +30,12 @@ public class JdbcSearchDAO implements SearchDAO {
         ArrayList<Contact> contacts = new ArrayList<>();
         int totalResults = 0;
         int offset = (currentPage -1) * resultsPerPage;
-        String correctedSearchTerm = "'%" + searchTerm + "%'";
         Contact contact;
         String query;
         SqlRowSet results;
         String query2;
 
+        //If no search term included
         if(searchTerm.equals("")) {
             query = "SELECT COUNT (*) AS count " +
                     "FROM contacts;";
@@ -50,17 +48,19 @@ public class JdbcSearchDAO implements SearchDAO {
                     "ORDER BY name " + (sortOrder.toUpperCase().equals("DESC")?"DESC":"ASC") + " " +
                     "LIMIT ? OFFSET ?;";
             results = jdbcTemplate.queryForRowSet(query2, resultsPerPage, offset);
+
+        //If search term included
         } else {
             query = "SELECT COUNT (*) AS count " +
                     "FROM contacts " +
-                    "WHERE name LIKE '%' || ? || '%';";
+                    "WHERE name ILIKE '%' || ? || '%';";
             results = jdbcTemplate.queryForRowSet(query, searchTerm);
             while(results.next()){
                 totalResults = results.getInt("count");
             }
             query2  = "SELECT * " +
                     "FROM contacts " +
-                    "WHERE name LIKE '%' || ? || '%' " +
+                    "WHERE name ILIKE '%' || ? || '%' " +
                     "ORDER BY name " + (sortOrder.toUpperCase().equals("DESC")?"DESC":"ASC") + " " +
                     "LIMIT ? OFFSET ?;";
             results = jdbcTemplate.queryForRowSet(query2, searchTerm, resultsPerPage, offset);

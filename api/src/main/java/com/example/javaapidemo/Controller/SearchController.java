@@ -2,17 +2,13 @@ package com.example.javaapidemo.Controller;
 
 import com.example.javaapidemo.DAO.SearchDAO;
 import com.example.javaapidemo.Exception.InvalidParametersException;
-import com.example.javaapidemo.Model.Contact;
 import com.example.javaapidemo.Model.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.color.ICC_ColorSpace;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 @RestController
@@ -30,6 +26,7 @@ public class SearchController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
+    //@PreAuthorize("hasRole('')")
     public Result searchNames(@RequestParam(defaultValue = "", name = "term") String searchTerm,
                               @RequestParam(defaultValue = "DESC", name = "sort") String sort,
                               @RequestParam(defaultValue = "10", name =  "qty") int resultsPerPage,
