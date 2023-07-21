@@ -34,7 +34,7 @@ public class SearchController {
 
          //Check parameters
          Parameters parameters = new Parameters(searchTerm, sort, resultsPerPage, currentPage);
-        HashMap<String, String> invalidParams = parameters.checkInvalidParams();
+         HashMap<String, String> invalidParams = parameters.checkInvalidParams();
          if(invalidParams.size() > 0){
              //If an invalid param is received, log message and send custom http400 status
              String message = "Received Invalid Parameters: " + invalidParams.toString();
